@@ -1,0 +1,32 @@
+name: Build Pesto Windows App
+on: [workflow_dispatch] # Manual trigger from the Actions tab
+
+jobs:
+  build:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+
+      - name: Install Nativefier
+        run: npm install -g nativefier
+
+      - name: Run Build (The Bash Command)
+        # Using pwsh (PowerShell) for Windows-latest; use shell: bash to force bash syntax
+        shell: bash
+        run: |
+          nativefier --name "PestoHome" \
+          --icon "logo.jpg" \
+          --inject "toolbar.js" \
+          --platform "windows" \
+          "https://github.io"
+
+      - name: Save App as Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: PestoHome-Desktop
+          path: PestoHome-win32-x64/
