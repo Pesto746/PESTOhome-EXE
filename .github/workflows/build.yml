@@ -19,11 +19,12 @@ jobs:
       - name: Run Build
         shell: bash
         run: |
-          # Use the exact home page and a broad regex to capture everything on the domain
-          # --strict-internal-urls ensures Nativefier only uses your regex and doesn't guess
+          # --icon points to the image file in your repo (make sure the filename matches)
+          # --internal-urls and --strict-internal-urls keep page 2 inside the app
           nativefier "https://github.io" \
           --name "PestoHome" \
           --platform "windows" \
+          --icon "./icon.png" \
           --internal-urls ".*pesto746\.github\.io.*" \
           --strict-internal-urls \
           --inject "./toolbar.js" \
