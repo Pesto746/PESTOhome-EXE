@@ -19,10 +19,11 @@ jobs:
       - name: Run Build
         shell: bash
         run: |
-          # We've added '.' to ensure it looks in the current folder for the inject file
-          nativefier "https://github.io" \
+          # Starting at Page 1 and forcing all PESTOhome-EXE links to stay in-app
+          nativefier "https://pesto746.github.io/PESTOhome-EXE/" \
           --name "PestoHome" \
           --platform "windows" \
+          --internal-urls ".*?pesto746\.github\.io/PESTOhome-EXE.*?" \
           --inject "./toolbar.js" \
           --overwrite \
           ./output_app/
