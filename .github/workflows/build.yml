@@ -25,8 +25,9 @@ jobs:
           --platform "windows" \
           "https://github.io"
 
-      - name: Save App as Artifact
+          - name: Save App as Artifact
         uses: actions/upload-artifact@v4
         with:
           name: PestoHome-Desktop
-          path: PestoHome-win32-x64/
+          path: PestoHome-* # This wildcard finds the folder automatically
+
