@@ -11,7 +11,7 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: '20' # Reverting to 20 to stop the "Force" warning; it's still valid until Sept 2026
+          node-version: '20'
 
       - name: Install Nativefier
         run: npm install -g nativefier
@@ -19,18 +19,19 @@ jobs:
       - name: Run Build
         shell: bash
         run: |
-          nativefier --name "PestoHome" \
-          --icon "logo.jpg" \
-          --inject "toolbar.js" \
+          # We've added '.' to ensure it looks in the current folder for the inject file
+          nativefier "https://github.io" \
+          --name "PestoHome" \
           --platform "windows" \
-          "https://github.io"
+          --inject "./toolbar.js" \
+          --overwrite \
+          ./output_app/
 
-      - name: Debug - List all folders
-        run: ls -R
+      - name: Verify Output
+        run: dir output_app
 
       - name: Save App as Artifact
         uses: actions/upload-artifact@v4
         with:
           name: PestoHome-Desktop-App
-          # This tells GitHub: "Find any folder that contains an .exe file"
-          path: ./**/*win32*/
+          path: output_app/
