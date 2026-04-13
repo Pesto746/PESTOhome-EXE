@@ -19,11 +19,13 @@ jobs:
       - name: Run Build
         shell: bash
         run: |
-          # Use the EXACT URL that works in your normal browser
+          # Use the exact home page and a broad regex to capture everything on the domain
+          # --strict-internal-urls ensures Nativefier only uses your regex and doesn't guess
           nativefier "https://github.io" \
           --name "PestoHome" \
           --platform "windows" \
-          --internal-urls ".*?pesto746\.github\.io/PESTOhome-EXE.*?" \
+          --internal-urls ".*pesto746\.github\.io.*" \
+          --strict-internal-urls \
           --inject "./toolbar.js" \
           --overwrite \
           ./output_app/
