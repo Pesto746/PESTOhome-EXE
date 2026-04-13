@@ -1,11 +1,12 @@
 name: Build Pesto Windows App
-on: [workflow_dispatch] # Manual trigger from the Actions tab
+on: [workflow_dispatch]
 
 jobs:
   build:
     runs-on: windows-latest
     steps:
-      - uses: actions/checkout@v4
+      - name: Checkout Code
+        uses: actions/checkout@v4
 
       - name: Setup Node.js
         uses: actions/setup-node@v4
@@ -15,8 +16,7 @@ jobs:
       - name: Install Nativefier
         run: npm install -g nativefier
 
-      - name: Run Build (The Bash Command)
-        # Using pwsh (PowerShell) for Windows-latest; use shell: bash to force bash syntax
+      - name: Run Build
         shell: bash
         run: |
           nativefier --name "PestoHome" \
@@ -25,9 +25,11 @@ jobs:
           --platform "windows" \
           "https://github.io"
 
-          - name: Save App as Artifact
+      - name: List files for debugging
+        run: dir
+
+      - name: Save App as Artifact
         uses: actions/upload-artifact@v4
         with:
           name: PestoHome-Desktop
-          path: PestoHome-* # This wildcard finds the folder automatically
-
+          path: PestoHome-win32-* 
