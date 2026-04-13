@@ -19,8 +19,8 @@ jobs:
       - name: Run Build
         shell: bash
         run: |
-          # Starting at Page 1 and forcing all PESTOhome-EXE links to stay in-app
-          nativefier "https://pesto746.github.io/PESTOhome-EXE/" \
+          # Use the EXACT URL that works in your normal browser
+          nativefier "https://github.io" \
           --name "PestoHome" \
           --platform "windows" \
           --internal-urls ".*?pesto746\.github\.io/PESTOhome-EXE.*?" \
