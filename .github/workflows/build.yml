@@ -4,8 +4,6 @@ on: [workflow_dispatch]
 jobs:
   build:
     runs-on: windows-latest
-    env:
-      FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
     steps:
       - name: Checkout Code
         uses: actions/checkout@v4
@@ -13,7 +11,7 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: '24'
+          node-version: '20'
 
       - name: Install Nativefier
         run: npm install -g nativefier
@@ -21,19 +19,15 @@ jobs:
       - name: Run Build
         shell: bash
         run: |
-          # --internal-urls ".*?" forces EVERY link to stay inside the app
-          # Make sure icon.png and toolbar.js are in your main folder
+          # Using $GITHUB_WORKSPACE ensures the app finds your icon and js files
           nativefier "https://github.io" \
           --name "PestoHome" \
           --platform "windows" \
-          --icon "./icon.png" \
+          --icon "$GITHUB_WORKSPACE/icon.png" \
           --internal-urls ".*?" \
-          --inject "./toolbar.js" \
+          --inject "$GITHUB_WORKSPACE/toolbar.js" \
           --overwrite \
           ./output_app/
-
-      - name: Verify Output
-        run: dir output_app
 
       - name: Save App as Artifact
         uses: actions/upload-artifact@v4
