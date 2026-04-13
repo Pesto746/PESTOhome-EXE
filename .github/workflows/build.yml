@@ -4,6 +4,8 @@ on: [workflow_dispatch]
 jobs:
   build:
     runs-on: windows-latest
+    env:
+      FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
     steps:
       - name: Checkout Code
         uses: actions/checkout@v4
@@ -19,13 +21,13 @@ jobs:
       - name: Run Build
         shell: bash
         run: |
-          # Using $GITHUB_WORKSPACE ensures the app finds your icon and js files
+          # We removed the --icon flag to prevent the 'Exit Code 1' crash
+          # The ".*?" rule ensures Page 2 stays inside the app
           nativefier "https://github.io" \
           --name "PestoHome" \
           --platform "windows" \
-          --icon "$GITHUB_WORKSPACE/icon.png" \
           --internal-urls ".*?" \
-          --inject "$GITHUB_WORKSPACE/toolbar.js" \
+          --inject "./toolbar.js" \
           --overwrite \
           ./output_app/
 
@@ -33,4 +35,4 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: PestoHome-Desktop-App
-          path: output_app/
+          path: ./*PestoHome-win32-x64/
