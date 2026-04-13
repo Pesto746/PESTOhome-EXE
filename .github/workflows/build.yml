@@ -4,8 +4,6 @@ on: [workflow_dispatch]
 jobs:
   build:
     runs-on: windows-latest
-    env:
-      FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
     steps:
       - name: Checkout Code
         uses: actions/checkout@v4
@@ -21,18 +19,20 @@ jobs:
       - name: Run Build
         shell: bash
         run: |
-          # We removed the --icon flag to prevent the 'Exit Code 1' crash
-          # The ".*?" rule ensures Page 2 stays inside the app
+          # We'll let Nativefier choose the folder name to avoid path errors
           nativefier "https://github.io" \
           --name "PestoHome" \
           --platform "windows" \
           --internal-urls ".*?" \
           --inject "./toolbar.js" \
-          --overwrite \
-          ./output_app/
+          --overwrite
+
+      - name: List Files (Debug)
+        run: dir
 
       - name: Save App as Artifact
         uses: actions/upload-artifact@v4
         with:
           name: PestoHome-Desktop-App
-          path: ./*PestoHome-win32-x64/
+          # This captures any folder containing the word "PestoHome"
+          path: ./*PestoHome*/
