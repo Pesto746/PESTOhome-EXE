@@ -1,10 +1,6 @@
 name: Build Pesto Windows App
 on: [workflow_dispatch]
 
-# Silences Node.js 20 deprecation warnings for 2026
-env:
-  FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
-
 jobs:
   build:
     runs-on: windows-latest
@@ -15,7 +11,7 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: '24' # Use the latest stable Node version
+          node-version: '20' # Reverting to 20 to stop the "Force" warning; it's still valid until Sept 2026
 
       - name: Install Nativefier
         run: npm install -g nativefier
@@ -29,13 +25,12 @@ jobs:
           --platform "windows" \
           "https://github.io"
 
+      - name: Debug - List all folders
+        run: ls -R
+
       - name: Save App as Artifact
         uses: actions/upload-artifact@v4
         with:
           name: PestoHome-Desktop-App
-          # Using ** tells GitHub to search all subfolders for the build results
-          path: |
-            PestoHome-win32-x64/
-            PestoHome-*/
-            **/PestoHome-win32-x64/
-
+          # This tells GitHub: "Find any folder that contains an .exe file"
+          path: ./**/*win32*/
